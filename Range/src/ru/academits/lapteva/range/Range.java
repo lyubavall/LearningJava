@@ -1,4 +1,4 @@
-package ru.academits.range;
+package ru.academits.lapteva.range;
 
 public class Range {
     private double from;
@@ -14,7 +14,7 @@ public class Range {
     }
 
     public boolean isInside(double x) {
-        return (x >= from && x <= to);
+        return x >= from && x <= to;
     }
 
     public double getFrom() {
@@ -34,43 +34,23 @@ public class Range {
     }
 
     public Range getIntersection(Range range) {
-        if (range.from >= to || from >= range.to) {
+        double start = Math.max(from, range.from);
+        double end = Math.min(to, range.to);
+        if (start >= end) {
             return null;
+        } else {
+            return new Range(start, end);
         }
-
-        if (from <= range.from && to >= range.to) {
-            return new Range(range.from, range.to);
-        }
-
-        if (from > range.from && to < range.to) {
-            return new Range(from, to);
-        }
-
-        if (from <= range.from && to <= range.to) {
-            return new Range(range.from, to);
-        }
-
-        return new Range(from, range.to);
     }
 
     public Range[] getUnion(Range range) {
-        if (range.from > to || from > range.to) {
+        double start = Math.min(from, range.from);
+        double end = Math.max(to, range.to);
+        if (start > end) {
             return new Range[]{new Range(from, to), new Range(range.from, range.to)};
+        } else {
+            return new Range[]{new Range(start, end)};
         }
-
-        if (from <= range.from && to >= range.to) {
-            return new Range[]{new Range(from, to)};
-        }
-
-        if (from > range.from && to < range.to) {
-            return new Range[]{new Range(range.from, range.to)};
-        }
-
-        if (from <= range.from && to <= range.to) {
-            return new Range[]{new Range(from, range.to)};
-        }
-
-        return new Range[]{new Range(range.from, to)};
     }
 
     public Range[] getDifference(Range range) {

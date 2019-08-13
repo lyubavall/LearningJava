@@ -1,10 +1,10 @@
-package ru.academits.range;
+package ru.academits.lapteva.range.main;
 
-import java.util.Arrays;
+import ru.academits.lapteva.range.Range;
 
 public class Main {
     public static void main(String[] args) {
-        Range range1 = new Range(3, 9);
+        Range range1 = new Range(3, 6);
         Range range2 = new Range(5, 7);
 
         double length = range1.getLength();
@@ -35,11 +35,14 @@ public class Main {
         System.out.println();
 
         Range[] difference = range1.getDifference(range2);
+        if (difference.length == 0) {
+            System.out.println("Разность отрезков - пустой интервал");
+        }else {
+            System.out.print("Разность отрезков: ");
 
-        System.out.print("Разность отрезков: ");
-
-        for (Range range : difference) {
-            range.print();
+            for (Range range : difference) {
+                range.print();
+            }
         }
     }
 }
