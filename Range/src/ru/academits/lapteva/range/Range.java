@@ -36,21 +36,23 @@ public class Range {
     public Range getIntersection(Range range) {
         double start = Math.max(from, range.from);
         double end = Math.min(to, range.to);
+
         if (start >= end) {
             return null;
-        } else {
-            return new Range(start, end);
         }
+
+        return new Range(start, end);
     }
 
     public Range[] getUnion(Range range) {
         double start = Math.min(from, range.from);
         double end = Math.max(to, range.to);
-        if (start > end) {
+
+        if (Math.max(from, range.from) > Math.min(to, range.to)) {
             return new Range[]{new Range(from, to), new Range(range.from, range.to)};
-        } else {
-            return new Range[]{new Range(start, end)};
         }
+
+        return new Range[]{new Range(start, end)};
     }
 
     public Range[] getDifference(Range range) {

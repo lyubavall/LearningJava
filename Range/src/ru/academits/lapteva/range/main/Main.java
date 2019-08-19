@@ -4,7 +4,7 @@ import ru.academits.lapteva.range.Range;
 
 public class Main {
     public static void main(String[] args) {
-        Range range1 = new Range(3, 6);
+        Range range1 = new Range(1, 3);
         Range range2 = new Range(5, 7);
 
         double length = range1.getLength();
@@ -16,6 +16,7 @@ public class Main {
         System.out.println("x внутри отрезка? " + range1.isInside(x));
 
         Range intersection = range1.getIntersection(range2);
+
         if (intersection == null) {
             System.out.println("Пересечений нет");
         } else {
@@ -35,9 +36,10 @@ public class Main {
         System.out.println();
 
         Range[] difference = range1.getDifference(range2);
+
         if (difference.length == 0) {
             System.out.println("Разность отрезков - пустой интервал");
-        }else {
+        } else {
             System.out.print("Разность отрезков: ");
 
             for (Range range : difference) {
