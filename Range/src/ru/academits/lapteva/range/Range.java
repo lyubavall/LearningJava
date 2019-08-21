@@ -45,12 +45,12 @@ public class Range {
     }
 
     public Range[] getUnion(Range range) {
-        double start = Math.min(from, range.from);
-        double end = Math.max(to, range.to);
-
         if (Math.max(from, range.from) > Math.min(to, range.to)) {
             return new Range[]{new Range(from, to), new Range(range.from, range.to)};
         }
+
+        double start = Math.min(from, range.from);
+        double end = Math.max(to, range.to);
 
         return new Range[]{new Range(start, end)};
     }
