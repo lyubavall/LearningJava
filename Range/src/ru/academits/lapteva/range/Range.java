@@ -51,7 +51,6 @@ public class Range {
 
         double start = Math.min(from, range.from);
         double end = Math.max(to, range.to);
-
         return new Range[]{new Range(start, end)};
     }
 
