@@ -2,18 +2,23 @@ package ru.academits.lapteva.array_list_home;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class ArrayListHome {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         ArrayList<String> list1 = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(new FileInputStream("ArrayListHome/src/ru/academits/lapteva/array_list_home/file.txt"))) {
             while (scanner.hasNextLine()) {
                 list1.add(scanner.nextLine());
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("Файл не найден");
+        } catch (IOException e) {
+            System.out.println("Ошибка при вводе/выводе данных из файла");
         }
 
         System.out.println(list1);
@@ -34,12 +39,16 @@ public class ArrayListHome {
         ArrayList<Integer> newList3 = new ArrayList<>();
         newList3.add(list3.get(0));
 
-        for (int i = 1; i < list3.size(); ++i) {
-            if (!newList3.contains(list3.get(i))) {
-                newList3.add(list3.get(i));
+        if (list3.size() == 0) {
+            System.out.println("Список пуст!");
+        } else {
+            for (int i = 1; i < list3.size(); ++i) {
+                if (!newList3.contains(list3.get(i))) {
+                    newList3.add(list3.get(i));
+                }
             }
-        }
 
-        System.out.println("без повторений: " + newList3);
+            System.out.println("без повторений: " + newList3);
+        }
     }
 }
