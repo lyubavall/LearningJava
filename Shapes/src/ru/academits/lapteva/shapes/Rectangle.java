@@ -1,6 +1,4 @@
-package ru.academits.lapteva.shapes.rectangle;
-
-import ru.academits.lapteva.shapes.Shape;
+package ru.academits.lapteva.shapes;
 
 public class Rectangle implements Shape {
     private double width;

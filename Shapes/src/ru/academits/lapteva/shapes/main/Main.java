@@ -1,15 +1,15 @@
 package ru.academits.lapteva.shapes.main;
 
 import ru.academits.lapteva.shapes.Shape;
-import ru.academits.lapteva.shapes.circle.Circle;
+import ru.academits.lapteva.shapes.Circle;
 import ru.academits.lapteva.shapes.comparators.AreaComparator;
 import ru.academits.lapteva.shapes.comparators.PerimeterComparator;
-import ru.academits.lapteva.shapes.rectangle.Rectangle;
-import ru.academits.lapteva.shapes.square.Square;
-import ru.academits.lapteva.shapes.triangle.Triangle;
+import ru.academits.lapteva.shapes.Rectangle;
+import ru.academits.lapteva.shapes.Square;
+import ru.academits.lapteva.shapes.Triangle;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Main {
     public static void main(String[] args) {
@@ -29,24 +29,22 @@ public class Main {
     }
 
     public static void printShapeWithMaxArea(ArrayList<Shape> shapeList) {
-        Shape[] shapeArray = shapeList.toArray(new Shape[shapeList.size()]);
-        Arrays.sort(shapeArray, new AreaComparator());
+        Collections.sort(shapeList, new AreaComparator());
 
         System.out.println("Фигура с наибольшей площадью:");
-        System.out.println(shapeArray[shapeArray.length - 1]);
-        System.out.println("площадью " + shapeArray[shapeArray.length - 1].getArea());
-        System.out.println("и периметром " + shapeArray[shapeArray.length - 1].getPerimeter());
+        System.out.println(shapeList.get(shapeList.size() - 1));
+        System.out.println("площадью " + shapeList.get(shapeList.size() - 1).getArea());
+        System.out.println("и периметром " + shapeList.get(shapeList.size() - 1).getPerimeter());
         System.out.println();
     }
 
     public static void printShapeWithSecondMaxPerimeter(ArrayList<Shape> shapeList) {
-        Shape[] shapeArray = shapeList.toArray(new Shape[shapeList.size()]);
-        Arrays.sort(shapeArray, new PerimeterComparator());
+        Collections.sort(shapeList, new PerimeterComparator());
 
         System.out.println("Фигура со вторым по величине периметром:");
-        System.out.println(shapeArray[shapeArray.length - 2]);
-        System.out.println("площадью " + shapeArray[shapeArray.length - 2].getArea());
-        System.out.println("и периметром " + shapeArray[shapeArray.length - 2].getPerimeter());
+        System.out.println(shapeList.get(shapeList.size() - 2));
+        System.out.println("площадью " + shapeList.get(shapeList.size() - 2).getArea());
+        System.out.println("и периметром " + shapeList.get(shapeList.size() - 2).getPerimeter());
         System.out.println();
     }
 }

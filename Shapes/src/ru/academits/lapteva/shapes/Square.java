@@ -1,37 +1,35 @@
-package ru.academits.lapteva.shapes.circle;
+package ru.academits.lapteva.shapes;
 
-import ru.academits.lapteva.shapes.Shape;
+public class Square implements Shape {
+    private double sideLength;
 
-public class Circle implements Shape {
-    private double radius;
-
-    public Circle(double radius) {
-        this.radius = radius;
+    public Square(double sideLength) {
+        this.sideLength = sideLength;
     }
 
     @Override
     public double getWidth() {
-        return radius * 2;
+        return sideLength;
     }
 
     @Override
     public double getHeight() {
-        return radius * 2;
+        return sideLength;
     }
 
     @Override
     public double getArea() {
-        return Math.PI * radius * radius;
+        return sideLength * sideLength;
     }
 
     @Override
     public double getPerimeter() {
-        return 2 * Math.PI * radius;
+        return sideLength * 4;
     }
 
     @Override
     public String toString() {
-        return "Круг с радиусом  " + radius;
+        return "Квадрат со стороной  " + sideLength;
     }
 
     @Override
@@ -44,15 +42,15 @@ public class Circle implements Shape {
             return false;
         }
 
-        Circle c = (Circle) s;
-        return radius == c.radius;
+        Square sq = (Square) s;
+        return sideLength == sq.sideLength;
     }
 
     @Override
     public int hashCode() {
         final int prime = 37;
         int hash = 1;
-        hash = prime * hash + Double.hashCode(radius);
+        hash = prime * hash + Double.hashCode(sideLength);
         return hash;
     }
 }
