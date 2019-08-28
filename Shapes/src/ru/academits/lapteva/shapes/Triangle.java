@@ -29,19 +29,19 @@ public class Triangle implements Shape {
 
     @Override
     public double getArea() {
-        double side1 = getSide(x1, x2, y1, y2);
-        double side2 = getSide(x2, x3, y2, y3);
-        double side3 = getSide(x3, x1, y3, y1);
+        double side1 = getSide(x1, y1, x2, y2);
+        double side2 = getSide(x2, y2, x3, y3);
+        double side3 = getSide(x3, y3, x1, y1);
         double halfPerimeter = (side1 + side2 + side3) / 2;
         return Math.sqrt(halfPerimeter * (halfPerimeter - side1) * (halfPerimeter - side2) * (halfPerimeter - side3));
     }
 
     @Override
     public double getPerimeter() {
-        return getSide(x1, x2, y1, y2) + getSide(x2, x3, y2, y3) + getSide(x3, x1, y3, y1);
+        return getSide(x1, y1, x2, y2) + getSide(x2, y2, x3, y3) + getSide(x3, y3, x1, y1);
     }
 
-    private double getSide(double x1, double x2, double y1, double y2) {
+    private static double getSide(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
     }
 
