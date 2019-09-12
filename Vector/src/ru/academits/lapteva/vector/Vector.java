@@ -3,98 +3,82 @@ package ru.academits.lapteva.vector;
 import java.util.Arrays;
 
 public class Vector {
-    private int n;
     private double[] components;
 
     public Vector(int n) {
-        this.n = n;
-        components = new double[n];
-
         if (n <= 0) {
             throw new IllegalArgumentException("Вектор нулевой размерности");
         }
+
+        components = new double[n];
     }
 
     public Vector(Vector vector) {
-        n = vector.components.length;
-        components = vector.components;
-
-        if (n <= 0) {
-            throw new IllegalArgumentException("Вектор нулевой размерности");
-        }
+        components = vector.components.clone();
     }
 
     public Vector(double[] components) {
-        n = components.length;
-        this.components = components;
-
-        if (n <= 0) {
+        if (components.length <= 0) {
             throw new IllegalArgumentException("Вектор нулевой размерности");
         }
+
+        this.components = components.clone();
     }
 
     public Vector(int n, double[] components) {
-        this.n = n;
-        this.components = Arrays.copyOf(components, n);
-
         if (n <= 0) {
             throw new IllegalArgumentException("Вектор нулевой размерности");
         }
+
+        this.components = Arrays.copyOf(components, n);
     }
 
     public int getSize() {
         return components.length;
     }
 
-    public Vector getVectorsSum(Vector vector) {
-        int resultSize = getResultSize(vector);
+    public Vector getSum(Vector vector) {
+        int vLength = vector.getSize();
 
-        for (int i = 0; i < resultSize; ++i) {
-            components[i] = components[i] + vector.components[i];
+        if (components.length < vLength) {
+            components = Arrays.copyOf(components, vLength);
+        }
+
+        for (int i = 0; i < vLength; ++i) {
+            components[i] += vector.components[i];
         }
 
         return this;
     }
 
-    public Vector getVectorsDifference(Vector vector) {
-        int resultSize = getResultSize(vector);
+    public Vector getDifference(Vector vector) {
+        int vLength = vector.getSize();
 
-        for (int i = 0; i < resultSize; ++i) {
-            components[i] = components[i] - vector.components[i];
+        if (components.length < vLength) {
+            components = Arrays.copyOf(components, vLength);
+        }
+
+        for (int i = 0; i < vLength; ++i) {
+            components[i] -= vector.components[i];
         }
 
         return this;
     }
 
-    private int getResultSize(Vector vector) {
-        int resultSize = n;
-
-        if (n > vector.getSize()) {
-            vector.components = Arrays.copyOf(vector.components, resultSize);
-        } else if (n < vector.getSize()) {
-            resultSize = vector.getSize();
-            components = Arrays.copyOf(components, resultSize);
-        }
-        return resultSize;
-    }
-
-    public Vector multiplyVectorScalarly(double k) {
-        for (int i = 0; i < n; ++i) {
-            components[i] = components[i] * k;
+    public Vector multiplyByCoefficient(double k) {
+        for (int i = 0; i < components.length; ++i) {
+            components[i] *= k;
         }
 
         return this;
     }
 
-    public Vector reflectVector() {
-        for (int i = 0; i < n; ++i) {
-            components[i] = components[i] * (-1);
-        }
-
+    public Vector reverse() {
+        multiplyByCoefficient(-1);
         return this;
     }
 
-    public double getVectorLength() {
+    public double getLength() {
         double quadraticSum = 0;
 
         for (double e : components) {
@@ -112,46 +96,18 @@ public class Vector {
         components[i] = component;
     }
 
-
-    public static Vector getVectorsSum(Vector v1, Vector v2) {
-        int resultSize = getResultSize(v1, v2);
-        double[] resultComponents = new double[resultSize];
-
-        for (int i = 0; i < resultSize; ++i) {
-            resultComponents[i] = v1.components[i] + v2.components[i];
-        }
-
-        return new Vector(resultComponents);
+    public static Vector getSum(Vector v1, Vector v2) {
+        return new Vector(v1).getSum(v2);
     }
 
-    public static Vector getVectorsDifference(Vector v1, Vector v2) {
-        int resultSize = getResultSize(v1, v2);
-        double[] resultComponents = new double[resultSize];
-
-        for (int i = 0; i < resultSize; ++i) {
-            resultComponents[i] = v1.components[i] - v2.components[i];
-        }
-
-        return new Vector(resultComponents);
-    }
-
-    private static int getResultSize(Vector v1, Vector v2) {
-        int resultSize = v1.getSize();
-
-        if (v1.getSize() > v2.getSize()) {
-            v2.components = Arrays.copyOf(v2.components, resultSize);
-        } else if (v1.getSize() < v2.getSize()) {
-            resultSize = v2.getSize();
-            v1.components = Arrays.copyOf(v1.components, resultSize);
-        }
-        return resultSize;
+    public static Vector getDifference(Vector v1, Vector v2) {
+        return new Vector(v1).getDifference(v2);
     }
 
     public static double getScalarMultiplication(Vector v1, Vector v2) {
-        int resultSize = getResultSize(v1, v2);
         double scalarMultiplication = 0;
 
-        for (int i = 0; i < resultSize; ++i) {
+        for (int i = 0; i < ((v1.getSize() < v2.getSize()) ? v1.getSize() : v2.getSize()); ++i) {
             scalarMultiplication += v1.components[i] * v2.components[i];
         }
 
@@ -174,19 +130,18 @@ public class Vector {
 
     @Override
     public int hashCode() {
-        final int prime = 37;
-        int hash = 1;
-        hash = prime * hash + Integer.hashCode(n);
-
-        for (double e : components) {
-            hash = prime * hash + Double.hashCode(e);
-        }
-
-        return hash;
+        return Arrays.hashCode(components);
     }
 
     @Override
     public String toString() {
-        return Arrays.toString(components);
+        StringBuilder s = new StringBuilder();
+        s.append(components[0]);
+
+        for (int i = 1; i < components.length; ++i) {
+            s.append(", ").append(components[i]);
+        }
+
+        return "{ " + s + " }";
     }
 }
