@@ -38,13 +38,13 @@ public class Vector {
     }
 
     public Vector getSum(Vector vector) {
-        int vLength = vector.getSize();
+        int vSize = vector.getSize();
 
-        if (components.length < vLength) {
-            components = Arrays.copyOf(components, vLength);
+        if (components.length < vSize) {
+            components = Arrays.copyOf(components, vSize);
         }
 
-        for (int i = 0; i < vLength; ++i) {
+        for (int i = 0; i < vSize; ++i) {
             components[i] += vector.components[i];
         }
 
@@ -52,13 +52,13 @@ public class Vector {
     }
 
     public Vector getDifference(Vector vector) {
-        int vLength = vector.getSize();
+        int vSize = vector.getSize();
 
-        if (components.length < vLength) {
-            components = Arrays.copyOf(components, vLength);
+        if (components.length < vSize) {
+            components = Arrays.copyOf(components, vSize);
         }
 
-        for (int i = 0; i < vLength; ++i) {
+        for (int i = 0; i < vSize; ++i) {
             components[i] -= vector.components[i];
         }
 
@@ -106,8 +106,9 @@ public class Vector {
 
     public static double getScalarMultiplication(Vector v1, Vector v2) {
         double scalarMultiplication = 0;
+        int vSize = Math.min(v1.getSize(), v2.getSize());
 
-        for (int i = 0; i < ((v1.getSize() < v2.getSize()) ? v1.getSize() : v2.getSize()); ++i) {
+        for (int i = 0; i < vSize; ++i) {
             scalarMultiplication += v1.components[i] * v2.components[i];
         }
 
@@ -125,7 +126,7 @@ public class Vector {
         }
 
         Vector v = (Vector) vector;
-        return (components.length == v.components.length && Arrays.equals(components, v.components));
+        return (Arrays.equals(components, v.components));
     }
 
     @Override
@@ -136,12 +137,12 @@ public class Vector {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        s.append(components[0]);
+        s.append("{ ").append(components[0]);
 
         for (int i = 1; i < components.length; ++i) {
             s.append(", ").append(components[i]);
         }
 
-        return "{ " + s + " }";
+        return String.valueOf(s.append(" }"));
     }
 }
