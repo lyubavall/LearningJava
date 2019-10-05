@@ -106,9 +106,9 @@ public class Vector {
 
     public static double getScalarMultiplication(Vector v1, Vector v2) {
         double scalarMultiplication = 0;
-        int vSize = Math.min(v1.getSize(), v2.getSize());
+        int minSize = Math.min(v1.getSize(), v2.getSize());
 
-        for (int i = 0; i < vSize; ++i) {
+        for (int i = 0; i < minSize; ++i) {
             scalarMultiplication += v1.components[i] * v2.components[i];
         }
 
@@ -126,7 +126,7 @@ public class Vector {
         }
 
         Vector v = (Vector) vector;
-        return (Arrays.equals(components, v.components));
+        return Arrays.equals(components, v.components);
     }
 
     @Override
@@ -143,6 +143,7 @@ public class Vector {
             s.append(", ").append(components[i]);
         }
 
-        return String.valueOf(s.append(" }"));
+        //return String.valueOf(s.append(" }"));
+        return s.append(" }").toString();
     }
 }
