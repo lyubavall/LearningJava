@@ -1,6 +1,6 @@
-package ru.academits.lapteva.matrix.main;
+package ru.academits.lapteva.range.main;
 
-import ru.academits.lapteva.matrix.Range;
+import ru.academits.lapteva.range.Range;
 
 public class Main {
     public static void main(String[] args) {

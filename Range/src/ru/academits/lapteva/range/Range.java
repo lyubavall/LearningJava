@@ -1,4 +1,4 @@
-package ru.academits.lapteva.matrix;
+package ru.academits.lapteva.range;
 
 public class Range {
     private double from;
