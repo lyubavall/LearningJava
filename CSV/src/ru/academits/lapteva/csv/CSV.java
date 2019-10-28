@@ -7,21 +7,18 @@ import java.util.Scanner;
 
 public class CSV {
     public static void main(String[] args) {
-        String filePath = "CSV/src/ru/academits/lapteva/csv/file.csv";
-        String fileOutPath = "CSV/src/ru/academits/lapteva/csv/file.html";
-
-        getHTMLFromCSV(filePath, fileOutPath);
+        getHTMLFromCSV(args[0], args[1]);
     }
 
-    private static void getHTMLFromCSV(String filePath, String fileOutPath) {
-        try (Scanner scanner = new Scanner(new FileInputStream(filePath));
+    private static void getHTMLFromCSV(String fileInPath, String fileOutPath) {
+        try (Scanner scanner = new Scanner(new FileInputStream(fileInPath));
              PrintWriter writer = new PrintWriter(fileOutPath)) {
-
+            writer.println("<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>HTML table from CSV</title></head><body>");
             writer.println("<table border=\"1\" cellpadding=\"5\">");
 
             boolean isNewCell = true;
             boolean isNewRow = true;
-            int DoubleQuotesCount = 0;
+            int doubleQuotesCount = 0;
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -36,7 +33,7 @@ public class CSV {
                     if (isNewCell) {
                         writer.print("<td>");
 
-                        DoubleQuotesCount = 0;
+                        doubleQuotesCount = 0;
                     }
 
                     if (character == ',') {
@@ -44,7 +41,7 @@ public class CSV {
                             writer.print("<td>");
 
                             isNewCell = true;
-                        } else if (DoubleQuotesCount % 2 != 0) {
+                        } else if (doubleQuotesCount % 2 != 0) {
                             writer.print(',');
                         } else {
                             writer.print("</td>");
@@ -53,13 +50,18 @@ public class CSV {
                         }
 
                     } else if (character == '"') {
-                        if (DoubleQuotesCount % 2 == 0 && DoubleQuotesCount != 0) {
-                            writer.print("&quot");
+                        if (doubleQuotesCount % 2 == 0 && doubleQuotesCount != 0) {
+                            writer.print("&quot;");
                         }
 
                         isNewCell = false;
-                        ++DoubleQuotesCount;
-
+                        ++doubleQuotesCount;
+                    } else if (character == '<') {
+                        writer.print("&lt;");
+                    } else if (character == '>') {
+                        writer.print("&gt;");
+                    } else if (character == '&') {
+                        writer.print("&amp;");
                     } else {
                         writer.print(character);
 
@@ -67,12 +69,11 @@ public class CSV {
                     }
 
                     if (i == line.length() - 1) {
-                        if (DoubleQuotesCount % 2 != 0) {
+                        if (doubleQuotesCount % 2 != 0) {
                             writer.println("<br>");
 
                             isNewCell = false;
                             isNewRow = false;
-
                         } else {
                             isNewCell = true;
                             isNewRow = true;
@@ -85,6 +86,7 @@ public class CSV {
             }
 
             writer.println("</table>");
+            writer.println("</body></html>");
         } catch (FileNotFoundException e) {
             System.out.println("Файл не найден");
         }
