@@ -25,8 +25,10 @@ public class Main {
         matrix2.setRow(0, vector1);
         System.out.println("Для матрицы " + matrix2 + " получить установленный вектор: " + matrix2.getRow(0));
         System.out.println("Получить вектор-столбец: " + matrix2.getColumn(0));
-        System.out.println("Транспонирование: " + matrix2.transpose());
-        System.out.println("Умножение на скаляр " + matrix2.multiplyByCoefficient(2));
+        matrix2.transpose();
+        System.out.println("Транспонирование: " + matrix2);
+        matrix2.multiplyByCoefficient(2);
+        System.out.println("Умножение на скаляр " + matrix2);
         System.out.println("Умножение на вектор " + matrix2.multiplyByVector(vector2));
 
         System.out.println("Для матриц " + matrix1 + " и " + matrix2);
