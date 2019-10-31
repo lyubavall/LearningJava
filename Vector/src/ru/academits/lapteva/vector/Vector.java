@@ -96,10 +96,6 @@ public class Vector {
         components[i] = component;
     }
 
-    public double[] getComponents() {
-        return components;
-    }
-
     public static Vector getSum(Vector v1, Vector v2) {
         return new Vector(v1).getSum(v2);
     }
