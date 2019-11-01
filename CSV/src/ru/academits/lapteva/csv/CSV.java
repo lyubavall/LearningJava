@@ -7,10 +7,14 @@ import java.util.Scanner;
 
 public class CSV {
     public static void main(String[] args) {
-        getHTMLFromCSV(args[0], args[1]);
+        if (args.length != 2) {
+            throw new IllegalArgumentException("Требуется 2 аргумента, первый - путь к файлу CSV, второй - путь к файлу, кторый будет создан");
+        }
+
+        convertCSVtoHTML(args[0], args[1]);
     }
 
-    private static void getHTMLFromCSV(String fileInPath, String fileOutPath) {
+    private static void convertCSVtoHTML(String fileInPath, String fileOutPath) {
         try (Scanner scanner = new Scanner(new FileInputStream(fileInPath));
              PrintWriter writer = new PrintWriter(fileOutPath)) {
             writer.println("<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>HTML table from CSV</title></head><body>");
@@ -38,6 +42,7 @@ public class CSV {
 
                     if (character == ',') {
                         if (i == line.length() - 1) {
+                            writer.print("</td>");
                             writer.print("<td>");
 
                             isNewCell = true;
