@@ -8,10 +8,10 @@ import java.util.Scanner;
 public class CSV {
     public static void main(String[] args) {
         if (args.length != 2) {
-            throw new IllegalArgumentException("Требуется 2 аргумента, первый - путь к файлу CSV, второй - путь к файлу, кторый будет создан");
+           System.out.println("Требуется 2 аргумента, первый - путь к файлу CSV, второй - путь к файлу, кторый будет создан");
+        } else {
+            convertCSVtoHTML(args[0], args[1]);
         }
-
-        convertCSVtoHTML(args[0], args[1]);
     }
 
     private static void convertCSVtoHTML(String fileInPath, String fileOutPath) {
