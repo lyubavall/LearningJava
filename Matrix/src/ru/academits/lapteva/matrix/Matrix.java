@@ -9,6 +9,7 @@ public class Matrix {
         if (rowsCount <= 0 || columnsCount <= 0) {
             throw new IllegalArgumentException("Количество строк и количество столбцов должны быть больше нуля");
         }
+
         rows = new Vector[rowsCount];
 
         for (int i = 0; i < rowsCount; ++i) {
@@ -80,20 +81,20 @@ public class Matrix {
         return rows[0].getSize();
     }
 
-    private void validateIndex(int rowIndex) {
+    private void validateRowIndex(int rowIndex) {
         if (rowIndex < 0 || rowIndex >= rows.length) {
-            throw new IndexOutOfBoundsException("Индекс должен быть в пределах от 0 до " + (rows.length - 1));
+            throw new IndexOutOfBoundsException("Индекс строки должен быть в пределах от 0 до " + (rows.length - 1));
         }
     }
 
     public Vector getRow(int rowIndex) {
-        validateIndex(rowIndex);
+        validateRowIndex(rowIndex);
 
         return new Vector(rows[rowIndex]);
     }
 
     public void setRow(int rowIndex, Vector row) {
-        validateIndex(rowIndex);
+        validateRowIndex(rowIndex);
 
         if (row.getSize() > this.getColumnsCount()) {
             throw new IllegalArgumentException("Размерность вектора не должна быть больше, чем число столбцов в матрице");
@@ -108,7 +109,7 @@ public class Matrix {
 
     public Vector getColumn(int columnIndex) {
         if (columnIndex < 0 || columnIndex >= this.getColumnsCount()) {
-            throw new IndexOutOfBoundsException("Индекс должен быть в пределах от 0 до " + (this.getColumnsCount() - 1));
+            throw new IndexOutOfBoundsException("Индекс столбца должен быть в пределах от 0 до " + (this.getColumnsCount() - 1));
         }
 
         Vector column = new Vector(rows.length);
@@ -124,7 +125,7 @@ public class Matrix {
         Vector[] newRows = new Vector[this.getColumnsCount()];
 
         for (int i = 0; i < newRows.length; ++i) {
-            newRows[i] = new Vector(this.getColumn(i));
+            newRows[i] = this.getColumn(i);
         }
 
         rows = newRows;
@@ -150,22 +151,22 @@ public class Matrix {
         return resultedVector;
     }
 
-    private void checkMatrixSizes(Matrix matrix) {
+    private void checkSizesEquality(Matrix matrix) {
         if (matrix.getRowsCount() != this.getRowsCount() || matrix.getColumnsCount() != this.getColumnsCount()) {
             throw new IllegalArgumentException("Размер матриц не совпадает");
         }
     }
 
-    public void getSum(Matrix matrix) {
-        checkMatrixSizes(matrix);
+    public void add(Matrix matrix) {
+        checkSizesEquality(matrix);
 
         for (int i = 0; i < rows.length; ++i) {
             rows[i].getSum(matrix.rows[i]);
         }
     }
 
-    public void getDifference(Matrix matrix) {
-        checkMatrixSizes(matrix);
+    public void subtract(Matrix matrix) {
+        checkSizesEquality(matrix);
 
         for (int i = 0; i < rows.length; ++i) {
             rows[i].getDifference(matrix.rows[i]);
@@ -212,20 +213,20 @@ public class Matrix {
         return determinant;
     }
 
-    public static Matrix getSum(Matrix matrix1, Matrix matrix2) {
-        matrix1.checkMatrixSizes(matrix2);
+    public static Matrix add(Matrix matrix1, Matrix matrix2) {
+        matrix1.checkSizesEquality(matrix2);
 
         Matrix newMatrix = new Matrix(matrix1);
-        newMatrix.getSum(matrix2);
+        newMatrix.add(matrix2);
 
         return newMatrix;
     }
 
-    public static Matrix getDifference(Matrix matrix1, Matrix matrix2) {
-        matrix1.checkMatrixSizes(matrix2);
+    public static Matrix subtract(Matrix matrix1, Matrix matrix2) {
+        matrix1.checkSizesEquality(matrix2);
 
         Matrix newMatrix = new Matrix(matrix1);
-        newMatrix.getDifference(matrix2);
+        newMatrix.subtract(matrix2);
 
         return newMatrix;
     }
@@ -235,15 +236,15 @@ public class Matrix {
             throw new IllegalArgumentException("Матрицы не согласованы");
         }
 
-        Matrix NewMatrix = new Matrix(matrix1.getRowsCount(), matrix2.getColumnsCount());
+        Matrix newMatrix = new Matrix(matrix1.getRowsCount(), matrix2.getColumnsCount());
 
-        for (int i = 0; i < NewMatrix.getRowsCount(); ++i) {
-            for (int j = 0; j < NewMatrix.getColumnsCount(); ++j) {
-                NewMatrix.rows[i].setComponent(j, Vector.getScalarMultiplication(matrix1.rows[i], matrix2.getColumn(j)));
+        for (int i = 0; i < newMatrix.getRowsCount(); ++i) {
+            for (int j = 0; j < newMatrix.getColumnsCount(); ++j) {
+                newMatrix.rows[i].setComponent(j, Vector.getScalarMultiplication(matrix1.rows[i], matrix2.getColumn(j)));
             }
         }
 
-        return NewMatrix;
+        return newMatrix;
     }
 
     @Override

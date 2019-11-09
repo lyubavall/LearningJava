@@ -32,9 +32,9 @@ public class Main {
         System.out.println("Умножение на вектор " + matrix2.multiplyByVector(vector2));
 
         System.out.println("Для матриц " + matrix1 + " и " + matrix2);
-        matrix1.getSum(matrix2);
+        matrix1.add(matrix2);
         System.out.println("Сумма матриц " + matrix1);
-        matrix1.getDifference(matrix2);
+        matrix1.subtract(matrix2);
 
         System.out.println("Разница матриц " + matrix1);
         System.out.println("Определитель матрицы: " + matrix4.getDeterminant());
@@ -43,8 +43,8 @@ public class Main {
         System.out.println("Статические методы:");
         System.out.println("Умножение матриц " + matrix2 + " и " + matrix5 + ":");
         System.out.println(Matrix.multiply(matrix2, matrix5));
-        System.out.println("Сумма матриц: " + Matrix.getSum(matrix2, matrix5));
-        System.out.println("Разница матриц: " + Matrix.getDifference(matrix2, matrix5));
+        System.out.println("Сумма матриц: " + Matrix.add(matrix2, matrix5));
+        System.out.println("Разница матриц: " + Matrix.subtract(matrix2, matrix5));
     }
 }
 
