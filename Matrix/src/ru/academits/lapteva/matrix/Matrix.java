@@ -96,20 +96,16 @@ public class Matrix {
     public void setRow(int rowIndex, Vector row) {
         validateRowIndex(rowIndex);
 
-        if (row.getSize() > this.getColumnsCount()) {
-            throw new IllegalArgumentException("Размерность вектора не должна быть больше, чем число столбцов в матрице");
+        if (row.getSize() != getColumnsCount()) {
+            throw new IllegalArgumentException("Размерность вектора должна совпадать с числом столбцов в матрице");
         }
 
-        rows[rowIndex] = new Vector(this.getColumnsCount());
-
-        for (int i = 0; i < row.getSize(); ++i) {
-            rows[rowIndex].setComponent(i, row.getComponent(i));
-        }
+        rows[rowIndex] = new Vector(row);
     }
 
     public Vector getColumn(int columnIndex) {
-        if (columnIndex < 0 || columnIndex >= this.getColumnsCount()) {
-            throw new IndexOutOfBoundsException("Индекс столбца должен быть в пределах от 0 до " + (this.getColumnsCount() - 1));
+        if (columnIndex < 0 || columnIndex >= getColumnsCount()) {
+            throw new IndexOutOfBoundsException("Индекс столбца должен быть в пределах от 0 до " + (getColumnsCount() - 1));
         }
 
         Vector column = new Vector(rows.length);
@@ -122,10 +118,10 @@ public class Matrix {
     }
 
     public void transpose() {
-        Vector[] newRows = new Vector[this.getColumnsCount()];
+        Vector[] newRows = new Vector[getColumnsCount()];
 
         for (int i = 0; i < newRows.length; ++i) {
-            newRows[i] = this.getColumn(i);
+            newRows[i] = getColumn(i);
         }
 
         rows = newRows;
@@ -138,7 +134,7 @@ public class Matrix {
     }
 
     public Vector multiplyByVector(Vector vector) {
-        if (vector.getSize() != this.getColumnsCount()) {
+        if (vector.getSize() != getColumnsCount()) {
             throw new IllegalArgumentException("Вектор неправильной размерности");
         }
 
@@ -152,7 +148,7 @@ public class Matrix {
     }
 
     private void checkSizesEquality(Matrix matrix) {
-        if (matrix.getRowsCount() != this.getRowsCount() || matrix.getColumnsCount() != this.getColumnsCount()) {
+        if (matrix.getRowsCount() != getRowsCount() || matrix.getColumnsCount() != getColumnsCount()) {
             throw new IllegalArgumentException("Размер матриц не совпадает");
         }
     }
@@ -174,7 +170,7 @@ public class Matrix {
     }
 
     public double getDeterminant() {
-        if (rows.length != this.getColumnsCount()) {
+        if (rows.length != getColumnsCount()) {
             throw new IllegalArgumentException("Матрица не квадратная");
         }
 

@@ -10,7 +10,7 @@ public class Main {
         double[][] components1 = {{1}, {2, 3}};
         Matrix matrix2 = new Matrix(components1);
 
-        Vector vector1 = new Vector(1);
+        Vector vector1 = new Vector(2);
         Vector vector2 = new Vector(new double[]{-1, -1});
         Matrix matrix3 = new Matrix(new Vector[]{vector1, vector2});
 
