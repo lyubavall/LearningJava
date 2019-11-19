@@ -12,11 +12,12 @@ public class Main {
         list.addHead("2");
         list.addHead("1");
 
+        System.out.println("Список пустой? " + list.isEmpty());
         System.out.println("Список: \n" + list);
         System.out.println("Размер списка: " + list.getCount());
         System.out.println("Голова списка: " + list.getHeadData());
         System.out.println("Получить значение по индексу 1: " + list.getData(1));
-        System.out.println("Изменить значение " + list.changeData(0, "11") + " по индексу 0: \n" + list);
+        System.out.println("Изменить значение " + list.setData(0, "11") + " по индексу 0: \n" + list);
         System.out.println("Удаление элемента " + list.delete(1) + " по индексу 1");
         System.out.println("Список: \n" + list);
         System.out.println("Удаление головы " + list.deleteHead() + " списка: \n" + list);
@@ -29,7 +30,7 @@ public class Main {
         list.reverse();
         System.out.println("Развернуть список: \n" + list );
 
-        SinglyLinkedList<String> copedList = list.copy();
-        System.out.println("Скопированный список: \n" + copedList);
+        SinglyLinkedList<String> copiedList = list.copy();
+        System.out.println("Скопированный список: \n" + copiedList);
     }
 }
