@@ -1,5 +1,8 @@
 package ru.academits.lapteva.list;
 
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
 public class SinglyLinkedList<T> {
     private ListItem<T> head;
     private int count;
@@ -12,13 +15,14 @@ public class SinglyLinkedList<T> {
     }
 
     public boolean isEmpty() {
-        return count <= 0;
+        return count == 0;
     }
 
     public T getHeadData() {
         if (isEmpty()) {
-            throw new NullPointerException("Список пуст");
+            throw new NoSuchElementException("Список пуст");
         }
+
         return head.getData();
     }
 
@@ -30,11 +34,11 @@ public class SinglyLinkedList<T> {
 
     private ListItem<T> findItem(int index) {
         ListItem<T> p = head;
-        if (index > 0) {
-            for (int i = 1; i <= index; ++i) {
-                p = p.getNext();
-            }
+
+        for (int i = 1; i <= index; ++i) {
+            p = p.getNext();
         }
+
         return p;
     }
 
@@ -56,13 +60,13 @@ public class SinglyLinkedList<T> {
 
         if (index == 0) {
             return deleteHead();
-        } else {
-            ListItem<T> prev = findItem(index - 1);
-            T deletedData = prev.getNext().getData();
-            prev.setNext(prev.getNext().getNext());
-            count--;
-            return deletedData;
         }
+
+        ListItem<T> prev = findItem(index - 1);
+        T deletedData = prev.getNext().getData();
+        prev.setNext(prev.getNext().getNext());
+        count--;
+        return deletedData;
     }
 
     public void addHead(T data) {
@@ -73,39 +77,39 @@ public class SinglyLinkedList<T> {
     public void insert(int index, T data) {
         if (index == 0) {
             addHead(data);
-        } else {
-            if (index > count || index < 0) {
-                throw new IndexOutOfBoundsException("Индекс должен быть в пределах от 0 до " + count);
-            }
-            ListItem<T> prev = findItem(index - 1);
-            ListItem<T> newItem = new ListItem<>(data, prev.getNext());
-            prev.setNext(newItem);
-            count++;
+            return;
         }
+        if (index > count || index < 0) {
+            throw new IndexOutOfBoundsException("Индекс должен быть в пределах от 0 до " + count);
+        }
+
+        ListItem<T> prev = findItem(index - 1);
+        ListItem<T> newItem = new ListItem<>(data, prev.getNext());
+        prev.setNext(newItem);
+        count++;
     }
 
     public boolean delete(T data) {
-        boolean isDeleted = false;
-
         for (ListItem<T> p = head, prev = null; p != null; prev = p, p = p.getNext()) {
-            if ((data == null && p.getData() == null) || (p.getData() != null && p.getData().equals(data))) {
-                isDeleted = true;
+            if (Objects.equals(p.getData(), data)) {
                 if (prev == null) {
                     deleteHead();
                 } else {
                     prev.setNext(p.getNext());
                     count--;
                 }
+                return true;
             }
         }
 
-        return isDeleted;
+        return false;
     }
 
     public T deleteHead() {
         if (isEmpty()) {
-            throw new NullPointerException("Список пуст");
+            throw new NoSuchElementException("Список пуст");
         }
+
         T data = head.getData();
         head = head.getNext();
         count--;
@@ -116,6 +120,7 @@ public class SinglyLinkedList<T> {
         if (count < 2) {
             return;
         }
+
         ListItem<T> preItem;
         ListItem<T> currentItem = head;
         ListItem<T> nextItem = currentItem.getNext();
@@ -136,6 +141,7 @@ public class SinglyLinkedList<T> {
         if (count == 0) {
             return new SinglyLinkedList<>();
         }
+
         SinglyLinkedList<T> copy = new SinglyLinkedList<>();
         copy.addHead(head.getData());
         ListItem<T> copiedItem = copy.head;
@@ -154,16 +160,16 @@ public class SinglyLinkedList<T> {
     public String toString() {
         if (count <= 0) {
             return System.lineSeparator();
-        } else {
-            StringBuilder s = new StringBuilder();
-            s.append(head.getData());
-
-            for (ListItem<T> p = head.getNext(); p != null; p = p.getNext()) {
-                s.append(System.lineSeparator());
-                s.append(p.getData());
-            }
-
-            return s.toString();
         }
+
+        StringBuilder s = new StringBuilder();
+        s.append(head.getData());
+
+        for (ListItem<T> p = head.getNext(); p != null; p = p.getNext()) {
+            s.append(System.lineSeparator());
+            s.append(p.getData());
+        }
+
+        return s.toString();
     }
 }
