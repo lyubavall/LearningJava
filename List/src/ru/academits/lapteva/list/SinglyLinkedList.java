@@ -90,15 +90,16 @@ public class SinglyLinkedList<T> {
     }
 
     public boolean delete(T data) {
-        for (ListItem<T> p = head, prev = null; p != null; prev = p, p = p.getNext()) {
-            if (Objects.equals(p.getData(), data)) {
-                if (prev == null) {
-                    deleteHead();
-                } else {
+        if (Objects.equals(head.getData(), data)) {
+            deleteHead();
+            return true;
+        } else {
+            for (ListItem<T> p = head.getNext(), prev = head; p != null; prev = p, p = p.getNext()) {
+                if (Objects.equals(p.getData(), data)) {
                     prev.setNext(p.getNext());
                     count--;
+                    return true;
                 }
-                return true;
             }
         }
 
