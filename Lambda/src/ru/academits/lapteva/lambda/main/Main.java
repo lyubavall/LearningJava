@@ -28,7 +28,7 @@ public class Main {
         List<String> uniqueNames = peopleList.stream()
                 .map(Person::getName)
                 .distinct()
-                .collect(Collectors .toList());
+                .collect(Collectors.toList());
         System.out.println("Список уникальных имен: " + uniqueNames);
 
         String names = uniqueNames.stream()
@@ -37,7 +37,7 @@ public class Main {
 
         List<Person> minors = peopleList.stream()
                 .filter(person -> person.getAge() < 18)
-                .collect(Collectors .toList());
+                .collect(Collectors.toList());
         System.out.println("Список людей младше 18 лет: " + minors);
 
         OptionalDouble averageAge = minors.stream()
@@ -56,7 +56,7 @@ public class Main {
         List<Person> peopleAged20To40Years = peopleList.stream()
                 .filter(person -> person.getAge() >= 20 && person.getAge() <= 45)
                 .sorted((p1, p2) -> p2.getAge() - p1.getAge())
-                .collect(Collectors .toList());
+                .collect(Collectors.toList());
         System.out.println("Люди от 20 до 45: " + peopleAged20To40Years);
     }
 }
