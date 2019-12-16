@@ -3,6 +3,7 @@ package ru.academits.lapteva.lambda.main;
 import ru.academits.lapteva.lambda.Person;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
@@ -24,18 +25,24 @@ public class Main {
         peopleList.add(person5);
         peopleList.add(person6);
 
-        ArrayList<String> uniqueNames = peopleList.stream().map(Person::getName).distinct().collect(Collectors
-                .toCollection(ArrayList::new));
+        List<String> uniqueNames = peopleList.stream()
+                .map(Person::getName)
+                .distinct()
+                .collect(Collectors .toList());
         System.out.println("Список уникальных имен: " + uniqueNames);
 
-        String names = uniqueNames.stream().collect(Collectors.joining(",", "Имена:", "."));
+        String names = uniqueNames.stream()
+                .collect(Collectors.joining(", ", "Имена: ", "."));
         System.out.println(names);
 
-        ArrayList<Person> minors = peopleList.stream().filter(person -> person.getAge() < 18).collect(Collectors
-                .toCollection(ArrayList::new));
+        List<Person> minors = peopleList.stream()
+                .filter(person -> person.getAge() < 18)
+                .collect(Collectors .toList());
         System.out.println("Список людей младше 18 лет: " + minors);
 
-        OptionalDouble averageAge = minors.stream().mapToDouble(Person::getAge).average();
+        OptionalDouble averageAge = minors.stream()
+                .mapToDouble(Person::getAge)
+                .average();
         if (averageAge.isPresent()) {
             System.out.println("Средний возраст людей младше 18 лет: " + averageAge.getAsDouble());
         } else {
@@ -46,8 +53,10 @@ public class Main {
                 .collect(Collectors.groupingBy(Person::getName, Collectors.averagingInt(Person::getAge)));
         System.out.println("Средний возраст по именам" + peopleMap);
 
-        ArrayList<Person> peopleAged20To40Years = peopleList.stream().filter(person -> person.getAge() >= 20 && person.getAge() <= 45)
-                .sorted((p1, p2) -> p2.getAge() - p1.getAge()).collect(Collectors.toCollection(ArrayList::new));
+        List<Person> peopleAged20To40Years = peopleList.stream()
+                .filter(person -> person.getAge() >= 20 && person.getAge() <= 45)
+                .sorted((p1, p2) -> p2.getAge() - p1.getAge())
+                .collect(Collectors .toList());
         System.out.println("Люди от 20 до 45: " + peopleAged20To40Years);
     }
 }
