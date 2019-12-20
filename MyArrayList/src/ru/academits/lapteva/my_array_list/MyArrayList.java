@@ -191,9 +191,10 @@ public class MyArrayList<T> implements List<T> {
 
         boolean isRemove = false;
 
-        for (Object e : c) {
-            if (!contains(e)) {
-                remove(e);
+        for (int i = 0; i < size; i++) {
+            if (!c.contains(items[i])) {
+                remove(i);
+                i--;
                 isRemove = true;
             }
         }

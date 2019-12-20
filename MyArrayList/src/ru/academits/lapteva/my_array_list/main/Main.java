@@ -36,5 +36,8 @@ public class Main {
         System.out.println("Добавить список " + list2);
 
         System.out.println("Содержит ли этот список добавленный список? " + list2.containsAll(list1));
+
+        list2.retainAll(list1);
+        System.out.println("Оставить только элементы из list1: " + list2);
     }
 }
