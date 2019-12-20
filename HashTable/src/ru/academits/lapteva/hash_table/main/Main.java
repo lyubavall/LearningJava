@@ -18,7 +18,7 @@ public class Main {
         System.out.println("Хэш-таблица: " + System.lineSeparator() + table1);
         System.out.println("Удалить элемент w: " + table1.remove("w"));
         System.out.println("Элементы хэш-таблицы:");
-        for(String e: table1){
+        for (String e : table1) {
             System.out.println(e);
         }
 
@@ -27,6 +27,12 @@ public class Main {
         table2.addAll(list);
 
         System.out.println("Добавить список в хэш-таблицу: " + System.lineSeparator() + table2);
-        System.out.println("В массив: " + Arrays.toString(table2.toArray()));
+
+        Object[] array = table2.toArray();
+        System.out.println("В массив: " + Arrays.toString(array));
+
+        //noinspection SuspiciousMethodCalls
+        table2.removeAll(Arrays.asList(array));
+        System.out.println("Удалить массив из хэш-таблицы: " + System.lineSeparator() + table2);
     }
 }

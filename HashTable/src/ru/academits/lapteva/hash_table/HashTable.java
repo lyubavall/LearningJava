@@ -85,11 +85,11 @@ public class HashTable<T> implements Collection<T> {
     public Object[] toArray() {
         Object[] array = new Object[elementsCount];
         int i = 0;
-        for(T element: this){
+        for (T element : this) {
             array[i] = element;
             ++i;
         }
-        
+
         return array;
     }
 
@@ -141,8 +141,8 @@ public class HashTable<T> implements Collection<T> {
         }
 
         int matchesCount = 0;
-        for (Object element: c) {
-            if(contains(element)){
+        for (Object element : c) {
+            if (contains(element)) {
                 ++matchesCount;
             }
         }
@@ -156,7 +156,7 @@ public class HashTable<T> implements Collection<T> {
             return false;
         }
 
-        for(T element: c){
+        for (T element : c) {
             add(element);
         }
 
@@ -165,20 +165,37 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        if (c.size() == 0) {
+        if (c.size() == 0 || elementsCount == 0) {
             return false;
         }
 
-        for(Object element: c){
-            remove(element);
+        boolean isRemove = false;
+
+        for (Object element : c) {
+            if (remove(element)) {
+                isRemove = true;
+            }
         }
 
-        return true;
+        return isRemove;
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;
+        if (c.size() == 0 || elementsCount == 0) {
+            return false;
+        }
+
+        boolean isRemove = false;
+
+        for (T element : this) {
+            if (!c.contains(element)) {
+                remove(element);
+                isRemove = true;
+            }
+        }
+
+        return isRemove;
     }
 
     @Override
