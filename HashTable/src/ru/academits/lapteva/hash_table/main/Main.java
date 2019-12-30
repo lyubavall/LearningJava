@@ -16,8 +16,15 @@ public class Main {
         table1.add("w");
 
         System.out.println("Хэш-таблица: " + System.lineSeparator() + table1);
+
+        //noinspection ArraysAsListWithZeroOrOneArgument
+        ArrayList<String> st = new ArrayList<>(Arrays.asList("a"));
+        table1.retainAll(st);
+
+        System.out.println(table1);
         System.out.println("Удалить элемент w: " + table1.remove("w"));
         System.out.println("Элементы хэш-таблицы:");
+
         for (String e : table1) {
             System.out.println(e);
         }
@@ -34,5 +41,11 @@ public class Main {
         //noinspection SuspiciousMethodCalls
         table2.removeAll(Arrays.asList(array));
         System.out.println("Удалить массив из хэш-таблицы: " + System.lineSeparator() + table2);
+       // table2.remove(null);
+
+        ArrayList<String> list6 = new ArrayList<>();
+        String a = null;
+        list6.add(a);
+        System.out.println("Список содержит null? " + table2.containsAll(list6));
     }
 }

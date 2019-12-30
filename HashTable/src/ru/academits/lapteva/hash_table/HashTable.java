@@ -8,8 +8,7 @@ public class HashTable<T> implements Collection<T> {
     private int modificationsCount;
 
     public HashTable() {
-        //noinspection unchecked
-        hashTable = (ArrayList<T>[]) new ArrayList[11];
+        this(11);
     }
 
     public HashTable(int capacity) {
@@ -20,7 +19,7 @@ public class HashTable<T> implements Collection<T> {
         hashTable = (ArrayList<T>[]) new ArrayList[capacity];
     }
 
-    private int getIndex(T element) {
+    private int getIndex(Object element) {
         return Math.abs(element.hashCode() % hashTable.length);
     }
 
@@ -36,8 +35,16 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean contains(Object o) {
+        if (o == null) {
+            for (ArrayList<T> list : hashTable) {
+                if (list == null) {
+                    return true;
+                }
+            }
+        }
+
         int index = getIndex((T) o);
-        return (index < hashTable.length) && (hashTable[index] != null) && (hashTable[index].contains(o));
+        return (hashTable[index] != null) && (hashTable[index].contains(o));
     }
 
     @Override
@@ -49,8 +56,8 @@ public class HashTable<T> implements Collection<T> {
         private int currentIndex = -1;
         private int subCurrentIndex = -1;
         private int iteratedElementsCount = 0;
-        int modificationsCountBeforeIterator = modificationsCount;
-        boolean isNewLine = true;
+        private int modificationsCountBeforeIterator = modificationsCount;
+        private boolean isNewList = true;
 
         @Override
         public boolean hasNext() {
@@ -61,13 +68,15 @@ public class HashTable<T> implements Collection<T> {
         public T next() {
             if (!hasNext()) {
                 throw new NoSuchElementException("Нет следующего элемента");
-            } else if (modificationsCount != modificationsCountBeforeIterator) {
+            }
+
+            if (modificationsCount != modificationsCountBeforeIterator) {
                 throw new ConcurrentModificationException("Хэш-таблица была изменена во время обхода");
             }
 
-            if (isNewLine) {
+            if (isNewList) {
                 ++currentIndex;
-                while (hashTable[currentIndex] == null) {
+                while (hashTable[currentIndex] == null || hashTable[currentIndex].size() == 0) {
                     ++currentIndex;
                 }
 
@@ -75,9 +84,15 @@ public class HashTable<T> implements Collection<T> {
             }
 
             ++subCurrentIndex;
-            isNewLine = subCurrentIndex >= hashTable[currentIndex].size() - 1;
+            isNewList = subCurrentIndex >= hashTable[currentIndex].size() - 1;
             ++iteratedElementsCount;
             return hashTable[currentIndex].get(subCurrentIndex);
+        }
+
+        @Override
+        public void remove() {
+            hashTable[currentIndex].remove(subCurrentIndex);
+            --subCurrentIndex;
         }
     }
 
@@ -97,21 +112,21 @@ public class HashTable<T> implements Collection<T> {
     public <T1> T1[] toArray(T1[] a) {
         if (a.length < elementsCount) {
             //noinspection unchecked
-            return (T1[]) toArray();
-        } else {
-            //noinspection SuspiciousSystemArraycopy
-            System.arraycopy(toArray(), 0, a, 0, elementsCount);
-            if (a.length > elementsCount) {
-                a[elementsCount] = null;
-            }
-
-            return a;
+            return (T1[]) Arrays.copyOf(toArray(), hashTable.length, a.getClass());
         }
+        //noinspection SuspiciousSystemArraycopy
+        System.arraycopy(toArray(), 0, a, 0, elementsCount);
+        if (a.length > elementsCount) {
+            a[elementsCount] = null;
+        }
+
+        return a;
     }
 
     @Override
     public boolean add(T t) {
         int index = getIndex(t);
+
         if (hashTable[index] == null) {
             hashTable[index] = new ArrayList<>();
         }
@@ -125,7 +140,8 @@ public class HashTable<T> implements Collection<T> {
     @Override
     public boolean remove(Object o) {
         int index = getIndex((T) o);
-        if ((index < hashTable.length) && (hashTable[index] != null) && (hashTable[index].remove(o))) {
+
+        if ((hashTable[index] != null) && (hashTable[index].remove(o))) {
             --elementsCount;
             ++modificationsCount;
             return true;
@@ -141,13 +157,18 @@ public class HashTable<T> implements Collection<T> {
         }
 
         int matchesCount = 0;
+
         for (Object element : c) {
-            if (contains(element)) {
+             if (contains(element)) {
                 ++matchesCount;
             }
+
+             if(matchesCount == c.size()){
+                 return true;
+             }
         }
 
-        return matchesCount == c.size();
+        return false;
     }
 
     @Override
@@ -172,7 +193,7 @@ public class HashTable<T> implements Collection<T> {
         boolean isRemove = false;
 
         for (Object element : c) {
-            if (remove(element)) {
+            while (remove(element)) {
                 isRemove = true;
             }
         }
@@ -188,13 +209,20 @@ public class HashTable<T> implements Collection<T> {
 
         boolean isRemove = false;
 
-        for (T element : this) {
+        Iterator<T> iterator1 = iterator();
+        int removalsCount = 0;
+
+        while (iterator1.hasNext()) {
+            T element = iterator1.next();
+
             if (!c.contains(element)) {
-                remove(element);
                 isRemove = true;
+                ++removalsCount;
+                iterator1.remove();
             }
         }
 
+        elementsCount -= removalsCount;
         return isRemove;
     }
 
