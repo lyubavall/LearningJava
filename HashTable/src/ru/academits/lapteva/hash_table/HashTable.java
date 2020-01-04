@@ -12,14 +12,18 @@ public class HashTable<T> implements Collection<T> {
     }
 
     public HashTable(int capacity) {
-        if (capacity == 0) {
-            throw new IllegalArgumentException("Вместимость Хэш-таблицы не должна быть нулевая");
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Вместимость хэш-таблицы должна быть больше нуля");
         }
         //noinspection unchecked
         hashTable = (ArrayList<T>[]) new ArrayList[capacity];
     }
 
     private int getIndex(Object element) {
+        if (element == null) {
+            return 0;
+        }
+
         return Math.abs(element.hashCode() % hashTable.length);
     }
 
@@ -35,16 +39,9 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean contains(Object o) {
-        if (o == null) {
-            for (ArrayList<T> list : hashTable) {
-                if (list == null) {
-                    return true;
-                }
-            }
-        }
-
+        //noinspection unchecked
         int index = getIndex((T) o);
-        return (hashTable[index] != null) && (hashTable[index].contains(o));
+        return (hashTable[index] != null) && (hashTable[index].size() != 0) && (hashTable[index].contains(o));
     }
 
     @Override
@@ -76,6 +73,7 @@ public class HashTable<T> implements Collection<T> {
 
             if (isNewList) {
                 ++currentIndex;
+
                 while (hashTable[currentIndex] == null || hashTable[currentIndex].size() == 0) {
                     ++currentIndex;
                 }
@@ -88,18 +86,13 @@ public class HashTable<T> implements Collection<T> {
             ++iteratedElementsCount;
             return hashTable[currentIndex].get(subCurrentIndex);
         }
-
-        @Override
-        public void remove() {
-            hashTable[currentIndex].remove(subCurrentIndex);
-            --subCurrentIndex;
-        }
     }
 
     @Override
     public Object[] toArray() {
         Object[] array = new Object[elementsCount];
         int i = 0;
+
         for (T element : this) {
             array[i] = element;
             ++i;
@@ -112,7 +105,7 @@ public class HashTable<T> implements Collection<T> {
     public <T1> T1[] toArray(T1[] a) {
         if (a.length < elementsCount) {
             //noinspection unchecked
-            return (T1[]) Arrays.copyOf(toArray(), hashTable.length, a.getClass());
+            return (T1[]) Arrays.copyOf(toArray(), elementsCount, a.getClass());
         }
         //noinspection SuspiciousSystemArraycopy
         System.arraycopy(toArray(), 0, a, 0, elementsCount);
@@ -139,6 +132,7 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean remove(Object o) {
+        //noinspection unchecked
         int index = getIndex((T) o);
 
         if ((hashTable[index] != null) && (hashTable[index].remove(o))) {
@@ -152,23 +146,13 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        if (c.size() == 0) {
-            return false;
-        }
-
-        int matchesCount = 0;
-
         for (Object element : c) {
-             if (contains(element)) {
-                ++matchesCount;
+            if (!contains(element)) {
+                return false;
             }
-
-             if(matchesCount == c.size()){
-                 return true;
-             }
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -203,26 +187,29 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        if (c.size() == 0 || elementsCount == 0) {
-            return false;
+        if (c.size() == 0) {
+            clear();
+            return true;
         }
 
         boolean isRemove = false;
 
-        Iterator<T> iterator1 = iterator();
-        int removalsCount = 0;
+        for (ArrayList<T> list : hashTable) {
+            if (list == null || list.size() == 0) {
+                continue;
+            }
 
-        while (iterator1.hasNext()) {
-            T element = iterator1.next();
-
-            if (!c.contains(element)) {
-                isRemove = true;
-                ++removalsCount;
-                iterator1.remove();
+            for (int j = 0; j < list.size(); ++j) {
+                if (!c.contains(list.get(j))) {
+                    list.remove(j);
+                    --j;
+                    --elementsCount;
+                    ++modificationsCount;
+                    isRemove = true;
+                }
             }
         }
 
-        elementsCount -= removalsCount;
         return isRemove;
     }
 
