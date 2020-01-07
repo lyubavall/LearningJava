@@ -5,7 +5,7 @@ import java.util.*;
 public class MyArrayList<T> implements List<T> {
     private T[] items;
     private int size;
-    private int modificationsCount = 0;
+    private int modificationsCount;
 
     public MyArrayList() {
         //noinspection unchecked
@@ -54,7 +54,7 @@ public class MyArrayList<T> implements List<T> {
 
     private class MyIterator implements Iterator<T> {
         private int currentIndex = -1;
-        int modificationsCountBeforeIterator = modificationsCount;
+        private int modificationsCountBeforeIterator = modificationsCount;
 
         @Override
         public boolean hasNext() {
@@ -65,7 +65,9 @@ public class MyArrayList<T> implements List<T> {
         public T next() {
             if (!hasNext()) {
                 throw new NoSuchElementException("Нет следующего элемента");
-            } else if (modificationsCount != modificationsCountBeforeIterator) {
+            }
+
+            if (modificationsCount != modificationsCountBeforeIterator) {
                 throw new ConcurrentModificationException("Список был изменен во время обхода");
             }
 
@@ -83,16 +85,15 @@ public class MyArrayList<T> implements List<T> {
     public <T1> T1[] toArray(T1[] a) {
         if (a.length < size) {
             //noinspection unchecked
-            return (T1[]) Arrays.copyOf(items, size);
-        } else {
-            //noinspection SuspiciousSystemArraycopy
-            System.arraycopy(items, 0, a, 0, size);
-            if (a.length > size) {
-                a[size] = null;
-            }
-
-            return a;
+            return (T1[]) Arrays.copyOf(items, size, a.getClass());
         }
+        //noinspection SuspiciousSystemArraycopy
+        System.arraycopy(items, 0, a, 0, size);
+        if (a.length > size) {
+            a[size] = null;
+        }
+
+        return a;
     }
 
     private void increaseCapacity() {
@@ -126,21 +127,18 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        int matchesCount = 0;
-
         for (Object e : c) {
-            if (contains(e)) {
-                ++matchesCount;
+            if (!contains(e)) {
+                return false;
             }
         }
 
-        return matchesCount == c.size();
+        return true;
     }
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
-        addAll(size, c);
-        return true;
+        return addAll(size, c);
     }
 
     @Override
@@ -174,8 +172,7 @@ public class MyArrayList<T> implements List<T> {
         boolean isRemove = false;
 
         for (Object e : c) {
-            if (contains(e)) {
-                remove(e);
+            if (remove(e)) {
                 isRemove = true;
             }
         }
@@ -185,8 +182,9 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        if (c.size() == 0 || size == 0) {
-            return false;
+        if (c.size() == 0) {
+            clear();
+            return true;
         }
 
         boolean isRemove = false;
@@ -238,8 +236,11 @@ public class MyArrayList<T> implements List<T> {
     @Override
     public void add(int index, T element) {
         validateIndexForAdding(index);
-        ensureCapacity(size + 1);
-        System.arraycopy(items, index, items, index + 1, size - index);
+        ensureCapacity(size * 2);
+        if (index != size) {
+            System.arraycopy(items, index, items, index + 1, size - index);
+        }
+
         items[index] = element;
         ++size;
         ++modificationsCount;
@@ -271,7 +272,7 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public int lastIndexOf(Object o) {
-        for (int i = size(); i >= 0; --i) {
+        for (int i = size() - 1; i >= 0; --i) {
             if (Objects.equals(items[i], o)) {
                 return i;
             }
@@ -297,6 +298,10 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public String toString() {
+        if (size == 0) {
+            return "[]";
+        }
+
         StringBuilder s = new StringBuilder();
         s.append("[").append(items[0]);
 

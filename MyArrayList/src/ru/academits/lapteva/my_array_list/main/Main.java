@@ -11,7 +11,7 @@ public class Main {
         list1.add("2");
         list1.add("3");
         list1.add("4");
-        list1.add(1, "11");
+        list1.add(4, "11");
 
         System.out.println("Список: " + list1);
         System.out.println("Удалить по индексу 3 элемент " + list1.remove(3));
@@ -37,7 +37,10 @@ public class Main {
 
         System.out.println("Содержит ли этот список добавленный список? " + list2.containsAll(list1));
 
-        list2.retainAll(list1);
+        MyArrayList<String> list3 = new MyArrayList<>();
+
+        System.out.println(list1);
+        list1.retainAll(list3);
         System.out.println("Оставить только элементы из list1: " + list2);
     }
 }
