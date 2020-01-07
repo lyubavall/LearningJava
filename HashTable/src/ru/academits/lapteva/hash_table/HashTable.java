@@ -39,9 +39,8 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean contains(Object o) {
-        //noinspection unchecked
-        int index = getIndex((T) o);
-        return (hashTable[index] != null) && (hashTable[index].size() != 0) && (hashTable[index].contains(o));
+        int index = getIndex(o);
+        return (hashTable[index] != null) && (hashTable[index].contains(o));
     }
 
     @Override
@@ -132,8 +131,7 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean remove(Object o) {
-        //noinspection unchecked
-        int index = getIndex((T) o);
+        int index = getIndex(o);
 
         if ((hashTable[index] != null) && (hashTable[index].remove(o))) {
             --elementsCount;
@@ -187,11 +185,6 @@ public class HashTable<T> implements Collection<T> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        if (c.size() == 0) {
-            clear();
-            return true;
-        }
-
         boolean isRemove = false;
 
         for (ArrayList<T> list : hashTable) {
@@ -199,14 +192,11 @@ public class HashTable<T> implements Collection<T> {
                 continue;
             }
 
-            for (int j = 0; j < list.size(); ++j) {
-                if (!c.contains(list.get(j))) {
-                    list.remove(j);
-                    --j;
-                    --elementsCount;
-                    ++modificationsCount;
-                    isRemove = true;
-                }
+            int listSize = list.size();
+            if (list.retainAll(c)) {
+                isRemove = true;
+                ++modificationsCount;
+                elementsCount -= listSize - list.size();
             }
         }
 
