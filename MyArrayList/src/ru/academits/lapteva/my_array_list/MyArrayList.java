@@ -182,7 +182,7 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        if (c.size() == 0) {
+        if (c.size() == 0 && size != 0) {
             clear();
             return true;
         }
