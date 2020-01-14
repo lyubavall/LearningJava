@@ -37,10 +37,15 @@ public class Main {
 
         System.out.println("Содержит ли этот список добавленный список? " + list2.containsAll(list1));
 
-        MyArrayList<String> list3 = new MyArrayList<>();
-
         System.out.println(list1);
-        list1.retainAll(list3);
-        System.out.println("Оставить только элементы из list1: " + list2);
+        list1.retainAll(list2);
+        System.out.println("Оставить только элементы из list2: " + list1);
+
+        list2.add(1, "a");
+        list1.add(2, "a");
+
+        System.out.println("Удалить из " + list2 + "  " + "список " + list1);
+        list2.removeAll(list1);
+        System.out.println("После удаления " + list2);
     }
 }

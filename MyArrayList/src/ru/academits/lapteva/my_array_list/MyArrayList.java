@@ -153,9 +153,11 @@ public class MyArrayList<T> implements List<T> {
             System.arraycopy(items, index, items, index + c.size(), size - index);
         }
 
+        int insertIndex = index;
+
         for (T e : c) {
-            items[index] = e;
-            ++index;
+            items[insertIndex] = e;
+            ++insertIndex;
         }
 
         ++modificationsCount;
@@ -172,7 +174,7 @@ public class MyArrayList<T> implements List<T> {
         boolean isRemove = false;
 
         for (Object e : c) {
-            if (remove(e)) {
+            while (remove(e)) {
                 isRemove = true;
             }
         }
@@ -236,7 +238,10 @@ public class MyArrayList<T> implements List<T> {
     @Override
     public void add(int index, T element) {
         validateIndexForAdding(index);
-        ensureCapacity(size * 2);
+        if (items.length <= size) {
+            increaseCapacity();
+        }
+
         if (index != size) {
             System.arraycopy(items, index, items, index + 1, size - index);
         }
