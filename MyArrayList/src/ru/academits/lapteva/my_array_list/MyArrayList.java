@@ -13,7 +13,7 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public MyArrayList(int capacity) {
-        if (capacity == 0) {
+        if (capacity <= 0) {
             throw new IllegalArgumentException("Вместимость списка должна быть больше нуля");
         }
         //noinspection unchecked
@@ -153,11 +153,11 @@ public class MyArrayList<T> implements List<T> {
             System.arraycopy(items, index, items, index + c.size(), size - index);
         }
 
-        int insertIndex = index;
+        int i = index;
 
         for (T e : c) {
-            items[insertIndex] = e;
-            ++insertIndex;
+            items[i] = e;
+            ++i;
         }
 
         ++modificationsCount;
